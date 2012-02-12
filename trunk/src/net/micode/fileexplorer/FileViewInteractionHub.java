@@ -27,6 +27,7 @@ import net.micode.fileexplorer.FileOperationHelper.IOperationProgressListener;
 import net.micode.fileexplorer.FileSortHelper.SortMethod;
 import net.micode.fileexplorer.FileViewActivity.SelectFilesCallback;
 import net.micode.fileexplorer.TextInputDialog.OnFinishListener;
+import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -879,8 +880,8 @@ public class FileViewInteractionHub implements IOperationProgressListener {
                 R.drawable.ic_menu_show_sys);
         addMenuItem(menu, MENU_REFRESH, 6, R.string.operation_refresh,
                 R.drawable.ic_menu_refresh);
-        addMenuItem(menu, MENU_SETTING, 7, R.string.menu_setting, R.drawable.folder);
-        addMenuItem(menu, MENU_EXIT, 8, R.string.menu_exit, R.drawable.operation_button_cancel);
+        addMenuItem(menu, MENU_SETTING, 7, R.string.menu_setting, drawable.ic_menu_preferences);
+        addMenuItem(menu, MENU_EXIT, 8, R.string.menu_exit, drawable.ic_menu_close_clear_cancel);
         return true;
     }
 

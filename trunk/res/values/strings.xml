@@ -74,7 +74,7 @@
     <string name="stop_server">Stop Service</string>
     <string name="storage_warning">External storage is not available or cannot be read</string>
     <string name="tab_remote">FTP</string>
-    <string name="tab_sd">Folder</string>
+    <string name="tab_sd">File</string>
     <string name="wifi_state">WLAN Status</string>
     <string name="yes">Yes</string>
     <string name="dialog_select_type">Select file type</string>

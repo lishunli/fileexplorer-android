@@ -28,7 +28,7 @@
     <string name="operation_hide_sys">隐藏点文件和隐藏文件</string>
     <string name="cancel">取消</string>
     <string name="no_file">没有文件</string>
-    <string name="tab_sd">文件夹管理</string>
+    <string name="tab_sd">文件管理</string>
     <string name="tab_remote">远程管理</string>
     <string name="sd_folder">SD卡</string>
     <string name="category_all">所有</string>
