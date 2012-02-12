@@ -191,6 +191,7 @@ public final class R {
         public static final int category_zip=0x7f06000c;
         public static final int confirm=0x7f06000d;
         public static final int confirm_know=0x7f06000e;
+        public static final int default_primary_folder=0x7f06005a;
         public static final int dialog_select_type=0x7f06004c;
         public static final int dialog_type_audio=0x7f06004e;
         public static final int dialog_type_image=0x7f060050;
@@ -215,12 +216,14 @@ public final class R {
         public static final int install_successful=0x7f06001b;
         public static final int instruction=0x7f06001c;
         public static final int instruction_pre=0x7f06001d;
+        public static final int menu_exit=0x7f060057;
         public static final int menu_item_search=0x7f06001e;
         public static final int menu_item_sort=0x7f06001f;
         public static final int menu_item_sort_date=0x7f060020;
         public static final int menu_item_sort_name=0x7f060021;
         public static final int menu_item_sort_size=0x7f060022;
         public static final int menu_item_sort_type=0x7f060023;
+        public static final int menu_setting=0x7f060056;
         public static final int multi_select_title=0x7f060055;
         public static final int new_folder_name=0x7f060024;
         public static final int no=0x7f060025;
@@ -251,6 +254,8 @@ public final class R {
         public static final int operation_send=0x7f06003e;
         public static final int operation_show_sys=0x7f06003f;
         public static final int operation_unfavorite=0x7f060040;
+        public static final int pref_primary_folder=0x7f060058;
+        public static final int pref_read_root=0x7f060059;
         public static final int removed_favorite=0x7f060041;
         public static final int sd_folder=0x7f060042;
         public static final int search_hint=0x7f060043;
@@ -292,6 +297,7 @@ public final class R {
         public static final int TextAppearance_ActionButton=0x7f070015;
     }
     public static final class xml {
-        public static final int searchable=0x7f040000;
+        public static final int preferences=0x7f040000;
+        public static final int searchable=0x7f040001;
     }
 }

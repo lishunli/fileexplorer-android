@@ -243,6 +243,17 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         onOperationFavorite(path);
     }
 
+    private void onOperationSetting() {
+        Intent intent = new Intent(mContext, FileExplorerPreferenceActivity.class);
+        if (intent != null) {
+            try {
+                mContext.startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Log.e(LOG_TAG, "fail to start setting: " + e.toString());
+            }
+        }
+    }
+
     private void onOperationFavorite(String path) {
         FavoriteDatabaseHelper databaseHelper = FavoriteDatabaseHelper.getInstance();
         if (databaseHelper != null) {
@@ -298,7 +309,11 @@ public class FileViewInteractionHub implements IOperationProgressListener {
             if (mFileViewListener.onNavigation(path))
                 return;
 
-            mCurrentPath = path;
+            if(path.isEmpty()){
+                mCurrentPath = mRoot;
+            } else{
+                mCurrentPath = path;
+            }
             refreshFileList();
         }
 
@@ -724,6 +739,10 @@ public class FileViewInteractionHub implements IOperationProgressListener {
 
     private static final int MENU_SELECTALL = 16;
 
+    private static final int MENU_SETTING = 17;
+
+    private static final int MENU_EXIT = 18;
+
     private OnMenuItemClickListener menuItemClick = new OnMenuItemClickListener() {
 
         @Override
@@ -764,6 +783,12 @@ public class FileViewInteractionHub implements IOperationProgressListener {
                     break;
                 case GlobalConsts.MENU_FAVORITE:
                     onOperationFavorite();
+                    break;
+                case MENU_SETTING:
+                    onOperationSetting();
+                    break;
+                case MENU_EXIT:
+                    ((FileExplorerTabActivity) mContext).finish();
                     break;
                 // sort
                 case MENU_SORT_NAME:
@@ -814,6 +839,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
             mListViewContextMenuSelectedItem = -1;
             return true;
         }
+
     };
 
     private net.micode.fileexplorer.FileViewInteractionHub.Mode mCurrentMode;
@@ -853,6 +879,8 @@ public class FileViewInteractionHub implements IOperationProgressListener {
                 R.drawable.ic_menu_show_sys);
         addMenuItem(menu, MENU_REFRESH, 6, R.string.operation_refresh,
                 R.drawable.ic_menu_refresh);
+        addMenuItem(menu, MENU_SETTING, 7, R.string.menu_setting, R.drawable.folder);
+        addMenuItem(menu, MENU_EXIT, 8, R.string.menu_exit, R.drawable.operation_button_cancel);
         return true;
     }
 
