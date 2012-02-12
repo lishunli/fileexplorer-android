@@ -255,6 +255,7 @@ public final class R {
         public static final int operation_show_sys=0x7f06003f;
         public static final int operation_unfavorite=0x7f060040;
         public static final int pref_primary_folder=0x7f060058;
+        public static final int pref_primary_folder_summary=0x7f06005b;
         public static final int pref_read_root=0x7f060059;
         public static final int removed_favorite=0x7f060041;
         public static final int sd_folder=0x7f060042;

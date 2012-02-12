@@ -21,7 +21,9 @@ package net.micode.fileexplorer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
@@ -29,14 +31,50 @@ import android.preference.PreferenceManager;
  *
  * @author ShunLi
  */
-public class FileExplorerPreferenceActivity extends PreferenceActivity {
+public class FileExplorerPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private static final String PRIMARY_FOLDER = "pref_key_primary_folder";
     private static final String READ_ROOT = "pref_key_read_root";
 
+    private EditTextPreference mEditTextPreference;
+
     @Override
-    protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        mEditTextPreference = (EditTextPreference) findPreference(PRIMARY_FOLDER);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Setup the initial values
+        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+
+        mEditTextPreference.setSummary(this.getString(
+                R.string.pref_primary_folder_summary,
+                sharedPreferences.getString(PRIMARY_FOLDER, GlobalConsts.ROOT_PATH)));
+
+        // Set up a listener whenever a key changes
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedpreferences, String key) {
+        if (PRIMARY_FOLDER.equals(key)) {
+            mEditTextPreference.setSummary(this.getString(
+                    R.string.pref_primary_folder_summary,
+                    sharedpreferences.getString(PRIMARY_FOLDER, GlobalConsts.ROOT_PATH)));
+        }
     }
 
     public static String getPrimaryFolder(Context context) {
