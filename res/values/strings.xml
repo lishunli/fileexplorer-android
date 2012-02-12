@@ -74,7 +74,7 @@
     <string name="stop_server">Stop Service</string>
     <string name="storage_warning">External storage is not available or cannot be read</string>
     <string name="tab_remote">FTP</string>
-    <string name="tab_sd">SD card</string>
+    <string name="tab_sd">Folder</string>
     <string name="wifi_state">WLAN Status</string>
     <string name="yes">Yes</string>
     <string name="dialog_select_type">Select file type</string>
@@ -87,4 +87,10 @@
     <string name="favorite_screen_cap">MIUI Screen Shot</string>
     <string name="favorite_ringtone">Ringtone</string>
     <string name="multi_select_title" >Selected <xliff:g id="number">%1$s</xliff:g> item(s)</string>
+
+    <string name="menu_setting">Settings</string>
+    <string name="menu_exit">Exit</string>
+    <string name="pref_primary_folder">Primary folder</string>
+    <string name="pref_read_root">Read root</string>
+    <string name="default_primary_folder">/mnt/sdcard/</string>
 </resources>
