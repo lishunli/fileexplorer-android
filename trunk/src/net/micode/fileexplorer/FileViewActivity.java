@@ -164,7 +164,6 @@ public class FileViewActivity extends Fragment implements IFileInteractionListen
         mFileViewInteractionHub.setRootPath(rootDir);
 
         String currentDir = FileExplorerPreferenceActivity.getPrimaryFolder(mActivity);
-        ;
         Uri uri = intent.getData();
         if (uri != null) {
             if (baseSd && this.sdDir.startsWith(uri.getPath())) {
