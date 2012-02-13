@@ -92,6 +92,6 @@
     <string name="menu_exit">Exit</string>
     <string name="pref_primary_folder">Primary folder</string>
     <string name="pref_read_root">Read root</string>
-    <string name="default_primary_folder">/mnt/sdcard/</string>
+    <string name="default_primary_folder">/mnt/sdcard</string>
     <string name="pref_primary_folder_summary">The folder that appears when the program starts, and current path is <xliff:g id="string">%1$s</xliff:g></string>
 </resources>

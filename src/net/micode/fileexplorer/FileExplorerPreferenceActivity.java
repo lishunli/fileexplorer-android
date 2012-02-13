@@ -79,7 +79,7 @@ public class FileExplorerPreferenceActivity extends PreferenceActivity implement
 
     public static String getPrimaryFolder(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String primaryFolder = settings.getString(PRIMARY_FOLDER, GlobalConsts.ROOT_PATH);
+        String primaryFolder = settings.getString(PRIMARY_FOLDER, context.getString(R.string.default_primary_folder, GlobalConsts.ROOT_PATH));
 
         if (primaryFolder.isEmpty()) { // setting primary folder = empty("")
             primaryFolder = GlobalConsts.ROOT_PATH;
