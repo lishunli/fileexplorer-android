@@ -367,7 +367,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         if (mFileViewListener.onOperation(GlobalConsts.OPERATION_UP_LEVEL))
             return false;
 
-        if (!mCurrentPath.equals(mRoot)) {
+        if (!mRoot.equals(mCurrentPath)) {
             mCurrentPath = new File(mCurrentPath).getParent();
             refreshFileList();
             return true;
@@ -490,10 +490,10 @@ public class FileViewInteractionHub implements IOperationProgressListener {
 
     private void updateNavigationPane() {
         View upLevel = mFileViewListener.getViewById(R.id.path_pane_up_level);
-        upLevel.setVisibility(mCurrentPath.equals(mRoot) ? View.INVISIBLE : View.VISIBLE);
+        upLevel.setVisibility(mRoot.equals(mCurrentPath) ? View.INVISIBLE : View.VISIBLE);
 
         View arrow = mFileViewListener.getViewById(R.id.path_pane_arrow);
-        arrow.setVisibility(mCurrentPath.equals(mRoot) ? View.GONE : View.VISIBLE);
+        arrow.setVisibility(mRoot.equals(mCurrentPath) ? View.GONE : View.VISIBLE);
 
         mNavigationBarText.setText(mFileViewListener.getDisplayPath(mCurrentPath));
     }
