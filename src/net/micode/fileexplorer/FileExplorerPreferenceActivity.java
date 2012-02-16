@@ -19,6 +19,8 @@
 
 package net.micode.fileexplorer;
 
+import java.io.File;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -34,6 +36,7 @@ import android.preference.PreferenceManager;
 public class FileExplorerPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private static final String PRIMARY_FOLDER = "pref_key_primary_folder";
     private static final String READ_ROOT = "pref_key_read_root";
+    private static final String SYSTEM_SEPARATOR = File.separator;
 
     private EditTextPreference mEditTextPreference;
 
@@ -85,7 +88,12 @@ public class FileExplorerPreferenceActivity extends PreferenceActivity implement
             primaryFolder = GlobalConsts.ROOT_PATH;
         }
 
-        return primaryFolder;
+		int length = primaryFolder.length();
+		if (length > 1 && SYSTEM_SEPARATOR.equals(primaryFolder.substring(length - 1))) { // length = 1, ROOT_PATH
+			return primaryFolder.substring(0, length - 1);
+		} else {
+			return primaryFolder;
+		}
     }
 
     public static boolean isReadRoot(Context context) {
