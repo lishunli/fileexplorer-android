@@ -34,8 +34,7 @@ import android.widget.TextView;
 public class InformationDialog extends AlertDialog {
     protected static final int ID_USER = 100;
     private FileInfo mFileInfo;
-    @SuppressWarnings("unused")
-	private FileIconHelper mFileIconHelper;
+    private FileIconHelper mFileIconHelper;
     private Context mContext;
     private View mView;
 
@@ -88,10 +87,9 @@ public class InformationDialog extends AlertDialog {
         };
     };
 
-    @SuppressWarnings({ "unused", "rawtypes" })
-	private AsyncTask task;
+    private AsyncTask task;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings("unchecked")
     private void asyncGetSize() {
         task = new AsyncTask() {
             private long size;

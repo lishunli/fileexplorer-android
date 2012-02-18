@@ -20,15 +20,18 @@
 package net.micode.fileexplorer;
 
 
-import java.util.HashMap;
-
 import net.micode.fileexplorer.FileCategoryHelper.FileCategory;
 import net.micode.fileexplorer.FileIconLoader.IconLoadFinishListener;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.HashMap;
+
 public class FileIconHelper implements IconLoadFinishListener {
+
+    private static final String LOG_TAG = "FileIconHelper";
 
     private static HashMap<ImageView, ImageView> imageFrames = new HashMap<ImageView, ImageView>();
 

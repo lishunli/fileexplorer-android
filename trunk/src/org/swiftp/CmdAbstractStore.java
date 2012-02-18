@@ -33,16 +33,16 @@ import android.util.Log;
 
 
 abstract public class CmdAbstractStore extends FtpCmd {
-	public static final String message = "TEMPLATE!!";
-
+	public static final String message = "TEMPLATE!!"; 
+	
 	public CmdAbstractStore(SessionThread sessionThread, String input) {
 		super(sessionThread, CmdAbstractStore.class.toString());
 	}
-
+	
 	public void doStorOrAppe(String param, boolean append) {
 		myLog.l(Log.DEBUG, "STOR/APPE executing with append=" + append);
 		File storeFile = inputPathToChrootedFile(sessionThread.getWorkingDir(), param);
-
+		
 		String errString = null;
 		FileOutputStream out = null;
 		//DedicatedWriter dedicatedWriter = null;
@@ -73,7 +73,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
 				out = new FileOutputStream(storeFile, append);
 			} catch(FileNotFoundException e) {
 				try {
-					errString = "451 Couldn't open file \"" + param + "\" aka \"" +
+					errString = "451 Couldn't open file \"" + param + "\" aka \"" + 
 						storeFile.getCanonicalPath() + "\" for writing\r\n";
 				} catch (IOException io_e) {
 					errString = "451 Couldn't open file, nested exception\r\n";
@@ -99,8 +99,8 @@ abstract public class CmdAbstractStore extends FtpCmd {
 			} else {
 				myLog.d("Mode is ascii");
 			}
-//			int bytesSinceReopen = 0;
-//			int bytesSinceFlush = 0;
+			int bytesSinceReopen = 0;
+			int bytesSinceFlush = 0;
 			while(true) {
 				/*if(dedicatedWriter.checkErrorFlag()) {
 					errString = "451 File IO problem\r\n";
@@ -110,8 +110,8 @@ abstract public class CmdAbstractStore extends FtpCmd {
 				case -1:
 					myLog.l(Log.DEBUG, "Returned from final read");
 					// We're finished reading
-					break storing;
-				case 0:
+					break storing; 
+				case 0: 
 					errString = "426 Couldn't receive data\r\n";
 					break storing;
 				case -2:
@@ -140,7 +140,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
 								out.write(buffer, startPos, endPos-startPos);
 							}
 						}
-
+						
 						// Attempted bugfix for transfer stalls. Reopen file periodically.
 						//bytesSinceReopen += numRead;
 						//if(bytesSinceReopen >= Defaults.bytes_between_reopen &&
@@ -150,7 +150,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
 						//	out = new FileOutputStream(storeFile, true/*append*/);
 						//	bytesSinceReopen = 0;
 						//}
-
+						
 						// Attempted bugfix for transfer stalls. Flush file periodically.
 						//bytesSinceFlush += numRead;
 						//if(bytesSinceFlush >= Defaults.bytes_between_flush &&
@@ -159,14 +159,14 @@ abstract public class CmdAbstractStore extends FtpCmd {
 						//	out.flush();
 						//	bytesSinceFlush = 0;
 						//}
-
+						
 						// If this transfer fails, a later APPEND operation might be
 						// received. In that case, we will need to have flushed the
 						// previous writes in order for the append to work. The
 						// filesystem on my G1 doesn't seem to recognized unflushed
 						// data when appending.
 						out.flush();
-
+						
 					} catch (IOException e) {
 						errString = "451 File IO problem. Device might be full.\r\n";
 						myLog.d("Exception while storing: " + e);
@@ -196,7 +196,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
 				out.close();
 			}
 		} catch (IOException e) {}
-
+		
 		if(errString != null) {
 			myLog.l(Log.INFO, "STOR error: " + errString.trim());
 			sessionThread.writeString(errString);

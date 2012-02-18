@@ -22,7 +22,6 @@ package net.micode.fileexplorer;
 import java.util.Comparator;
 import java.util.HashMap;
 
-@SuppressWarnings("rawtypes")
 public class FileSortHelper {
 
     public enum SortMethod {
@@ -33,7 +32,7 @@ public class FileSortHelper {
 
     private boolean mFileFirst;
 
-	private HashMap<SortMethod, Comparator> mComparatorList = new HashMap<SortMethod, Comparator>();
+    private HashMap<SortMethod, Comparator> mComparatorList = new HashMap<SortMethod, Comparator>();
 
     public FileSortHelper() {
         mSort = SortMethod.name;
@@ -55,7 +54,7 @@ public class FileSortHelper {
         mFileFirst = f;
     }
 
-	public Comparator getComparator() {
+    public Comparator getComparator() {
         return mComparatorList.get(mSort);
     }
 

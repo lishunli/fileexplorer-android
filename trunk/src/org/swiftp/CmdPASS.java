@@ -19,6 +19,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.swiftp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public class CmdPASS extends FtpCmd implements Runnable {
