@@ -27,15 +27,16 @@ import net.micode.fileexplorer.FileCategoryHelper.FileCategory;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.provider.MediaStore.Files.FileColumns;
+import android.os.Handler.Callback;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.provider.MediaStore.Files.FileColumns;
 import android.util.Log;
 import android.widget.ImageView;
 

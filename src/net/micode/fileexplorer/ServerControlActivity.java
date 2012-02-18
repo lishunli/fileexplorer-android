@@ -20,9 +20,6 @@
 package net.micode.fileexplorer;
 
 
-import java.io.File;
-import java.net.InetAddress;
-
 import net.micode.fileexplorer.FileExplorerTabActivity.IBackPressedListener;
 
 import org.swiftp.Defaults;
@@ -49,11 +46,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.net.InetAddress;
 
 public class ServerControlActivity extends Fragment implements IBackPressedListener {
 
@@ -174,6 +174,7 @@ public class ServerControlActivity extends Fragment implements IBackPressedListe
         myLog.l(Log.DEBUG, "Updating UI", true);
 
         WifiManager wifiMgr = (WifiManager) mActivity.getSystemService(Context.WIFI_SERVICE);
+        int wifiState = wifiMgr.getWifiState();
         WifiInfo info = wifiMgr.getConnectionInfo();
         String wifiId = info != null ? info.getSSID() : null;
         boolean isWifiReady = FTPServerService.isWifiEnabled();
@@ -221,7 +222,7 @@ public class ServerControlActivity extends Fragment implements IBackPressedListe
             startStopButtonText.setTextColor(Color.GRAY);
         }
 
-        ipText.setVisibility(running ? View.VISIBLE : View.GONE);
+        ipText.setVisibility(running ? View.VISIBLE : View.INVISIBLE);
         instructionText.setVisibility(running ? View.VISIBLE : View.GONE);
         instructionTextPre.setVisibility(running ? View.GONE : View.VISIBLE);
     }

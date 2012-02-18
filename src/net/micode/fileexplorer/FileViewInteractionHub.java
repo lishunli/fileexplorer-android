@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2010-2011, The MiCode Open Source Community (www.micode.net)
  *
  * This file is part of FileExplorer.
@@ -22,11 +22,6 @@ package net.micode.fileexplorer;
 import java.io.File;
 import java.util.ArrayList;
 
-import net.micode.fileexplorer.FileListItem.ModeCallback;
-import net.micode.fileexplorer.FileOperationHelper.IOperationProgressListener;
-import net.micode.fileexplorer.FileSortHelper.SortMethod;
-import net.micode.fileexplorer.FileViewActivity.SelectFilesCallback;
-import net.micode.fileexplorer.TextInputDialog.OnFinishListener;
 import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -60,6 +55,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.micode.fileexplorer.FileListItem.ModeCallback;
+import net.micode.fileexplorer.FileOperationHelper.IOperationProgressListener;
+import net.micode.fileexplorer.FileSortHelper.SortMethod;
+import net.micode.fileexplorer.FileViewActivity.SelectFilesCallback;
+import net.micode.fileexplorer.TextInputDialog.OnFinishListener;
 
 public class FileViewInteractionHub implements IOperationProgressListener {
     private static final String LOG_TAG = "FileViewInteractionHub";
@@ -120,6 +121,18 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         mConfirmOperationBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    public void addContextMenuSelectedItem() {
+        if (mCheckedFileNameList.size() == 0) {
+            int pos = mListViewContextMenuSelectedItem;
+            if (pos != -1) {
+                FileInfo fileInfo = mFileViewListener.getItem(pos);
+                if (fileInfo != null) {
+                    mCheckedFileNameList.add(fileInfo);
+                }
+            }
+        }
+    }
+
     public ArrayList<FileInfo> getSelectedFileList() {
         return mCheckedFileNameList;
     }
@@ -176,7 +189,6 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         setupClick(mNavigationBar, R.id.path_pane_up_level);
     }
 
-    // ////////////////////////////////////////////////////////////////////////
     // buttons
     private void setupOperationPane() {
         mConfirmOperationBar = mFileViewListener.getViewById(R.id.moving_operation_bar);
@@ -293,7 +305,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         FileExplorerTabActivity fileExplorerTabActivity = (FileExplorerTabActivity) mContext;
         ActionMode mode = fileExplorerTabActivity.getActionMode();
         if (mode == null) {
-            mode = fileExplorerTabActivity.startActionMode(new ModeCallback());
+            mode = fileExplorerTabActivity.startActionMode(new ModeCallback(mContext, this));
             fileExplorerTabActivity.setActionMode(mode);
             Util.updateActionModeTitle(mode, mContext, getSelectedFileList().size());
         }
@@ -364,8 +376,9 @@ public class FileViewInteractionHub implements IOperationProgressListener {
     public boolean onOperationUpLevel() {
         showDropdownNavigation(false);
 
-        if (mFileViewListener.onOperation(GlobalConsts.OPERATION_UP_LEVEL))
-            return false;
+        if (mFileViewListener.onOperation(GlobalConsts.OPERATION_UP_LEVEL)) {
+            return true;
+        }
 
         if (!mRoot.equals(mCurrentPath)) {
             mCurrentPath = new File(mCurrentPath).getParent();
@@ -655,9 +668,6 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         }
     }
 
-    // ////////////////////////////////////////////////////////////////
-    // file list view
-
     // context menu
     private OnCreateContextMenuListener mListViewContextMenuListener = new OnCreateContextMenuListener() {
         @Override
@@ -695,7 +705,6 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         }
     };
 
-    // //////////////////////////////////////////////////
     // File List view setup
     private ListView mFileListView;
 
@@ -713,7 +722,6 @@ public class FileViewInteractionHub implements IOperationProgressListener {
         });
     }
 
-    // /////////////////////////////////////////////////////////////////////
     // menu
     private static final int MENU_SEARCH = 1;
 
@@ -756,15 +764,7 @@ public class FileViewInteractionHub implements IOperationProgressListener {
                 return true;
             }
 
-            if (mCheckedFileNameList.size() == 0) {
-                int pos = mListViewContextMenuSelectedItem;
-                if (pos != -1) {
-                    FileInfo fileInfo = mFileViewListener.getItem(pos);
-                    if (fileInfo != null) {
-                        mCheckedFileNameList.add(fileInfo);
-                    }
-                }
-            }
+            addContextMenuSelectedItem();
 
             switch (itemId) {
                 case MENU_SEARCH:
@@ -943,6 +943,27 @@ public class FileViewInteractionHub implements IOperationProgressListener {
 
         if (lFileInfo == null) {
             Log.e(LOG_TAG, "file does not exist on position:" + position);
+            return;
+        }
+
+        if (isInSelection()) {
+            boolean selected = lFileInfo.Selected;
+            ActionMode actionMode = ((FileExplorerTabActivity) mContext).getActionMode();
+            ImageView checkBox = (ImageView) view.findViewById(R.id.file_checkbox);
+            if (selected) {
+                mCheckedFileNameList.remove(lFileInfo);
+                checkBox.setImageResource(R.drawable.btn_check_off_holo_light);
+            } else {
+                mCheckedFileNameList.add(lFileInfo);
+                checkBox.setImageResource(R.drawable.btn_check_on_holo_light);
+            }
+            if (actionMode != null) {
+                if (mCheckedFileNameList.size() == 0) actionMode.finish();
+                else actionMode.invalidate();
+            }
+            lFileInfo.Selected = !selected;
+
+            Util.updateActionModeTitle(actionMode, mContext, mCheckedFileNameList.size());
             return;
         }
 

@@ -32,10 +32,12 @@ import java.util.List;
 import java.util.Queue;
 
 import net.micode.fileexplorer.FTPServerService;
+import net.micode.fileexplorer.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -45,10 +47,10 @@ public class ProxyConnector extends Thread {
 	public static final String ENCODING = "UTF-8";
 	public static final int RESPONSE_WAIT_MS = 10000;
 	public static final int QUEUE_WAIT_MS = 20000;
-	public static final long UPDATE_USAGE_BYTES = 5000000;
+	public static final long UPDATE_USAGE_BYTES = 5000000; 
 	public static final String PREFERRED_SERVER = "preferred_server"; //preferences
 	public static final int CONNECT_TIMEOUT = 5000;
-
+	
 	private FTPServerService ftpServerService;
 	private MyLog myLog = new MyLog(getClass().getName());
 	private JSONObject response = null;
@@ -62,26 +64,26 @@ public class ProxyConnector extends Thread {
 	private State proxyState = State.DISCONNECTED;
 	private String prefix;
 	private String proxyMessage = null;
-
+	
 	public enum State {CONNECTING, CONNECTED, FAILED, UNREACHABLE, DISCONNECTED};
-
+	
 	//QuotaStats cachedQuotaStats = null; // quotas have been canceled for now
-
+	
 	static final String USAGE_PREFS_NAME = "proxy_usage_data";
-
+	
 	/* We establish a so-called "command session" to the proxy. New connections
 	 * will be handled by creating addition control and data connections to the
 	 * proxy. See proxy_protocol.txt and proxy_architecture.pdf for an
 	 * explanation of how proxying works. Hint: it's complicated.
-	 */
-
+	 */ 
+	
 	public ProxyConnector(FTPServerService ftpServerService) {
 		this.ftpServerService = ftpServerService;
 		this.proxyUsage = getPersistedProxyUsage();
 		setProxyState(State.DISCONNECTED);
 		Globals.setProxyConnector(this);
 	}
-
+	
 	public void run() {
 		myLog.i("In ProxyConnector.run()");
 		setProxyState(State.CONNECTING);
@@ -181,7 +183,7 @@ public class ProxyConnector extends Thread {
 			persistProxyUsage();
 		}
 	}
-
+	
 	// This function is used to spawn a new Thread that will make a request over the
 	// command thread. Since the main ProxyConnector thread handles the input
 	// request/response de-multiplexing, it cannot also make a request using the
@@ -189,7 +191,7 @@ public class ProxyConnector extends Thread {
 	// a response, but the same thread is expected to deliver the response.
 	// The short story is, if the main ProxyConnector command session thread wants to
 	// make a request, the easiest way is to spawn a new thread and have it call
-	// sendCmdSocketRequest in the same way as any other thread.
+	// sendCmdSocketRequest in the same way as any other thread. 
 	//private Thread spawnQuotaRequester() {
 	//	return new Thread() {
 	//		public void run() {
@@ -197,11 +199,11 @@ public class ProxyConnector extends Thread {
 	//		}
 	//	};
 	//}
-
+	
 	/**
 	 * Since we want devices to generally stick with the same proxy server,
 	 * and we may want to explicitly redirect some devices to other servers,
-	 * we have this mechanism to store a "preferred server" on the device.
+	 * we have this mechanism to store a "preferred server" on the device. 
 	 */
 	private void preferServer(String hostname) {
 		SharedPreferences prefs = Globals.getContext()
@@ -210,14 +212,14 @@ public class ProxyConnector extends Thread {
 		editor.putString(PREFERRED_SERVER, hostname);
 		editor.commit();
 	}
-
+	
 	private String[] getProxyList() {
 		SharedPreferences prefs = Globals.getContext()
 			.getSharedPreferences(PREFERRED_SERVER, 0);
 		String preferred = prefs.getString(PREFERRED_SERVER, null);
 
 		String[] allProxies;
-
+		
 		if(Defaults.release) {
 			allProxies = new String[] {
 				"c1.swiftp.org",
@@ -244,25 +246,25 @@ public class ProxyConnector extends Thread {
 					"c8.swiftp.org",
 					"c9.swiftp.org"};
 		}
-
+		
 		// We should randomly permute the server list in order to spread
-		// load between servers. Collections offers a shuffle() function
+		// load between servers. Collections offers a shuffle() function 
 		// that does this, so we'll convert to List and back to String[].
 		List<String> proxyList = Arrays.asList(allProxies);
 		Collections.shuffle(proxyList);
 		allProxies = proxyList.toArray(new String[] {}); // arg used for type
-
+		
 		// Return preferred server first, followed by all others
 		if(preferred == null) {
 			return allProxies;
 		} else {
 			return Util.concatStrArrays(
-					new String[] {preferred}, allProxies);
+					new String[] {preferred}, allProxies); 
 		}
 	}
-
-
-
+	
+	
+	
 	private boolean checkAndPrintJsonError(JSONObject json) throws JSONException {
 		if(json.has("error_code")) {
 			// The returned JSON object will have a field called "errorCode"
@@ -275,7 +277,7 @@ public class ProxyConnector extends Thread {
 				s.append(json.getString("error_string"));
 			}
 			myLog.l(Log.INFO, s.toString());
-
+			
 			// Obsolete: there's no authentication anymore
 			// Dev code to enable frequent database wipes. If we fail to login,
 			// remove our stored account info, causing a create_account action
@@ -290,7 +292,7 @@ public class ProxyConnector extends Thread {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Reads our persistent storage, looking for a stored proxy authentication secret.
 	 * @return The secret, if present, or null.
@@ -302,7 +304,7 @@ public class ProxyConnector extends Thread {
 			Defaults.getSettingsMode());
 		return settings.getString("proxySecret", null);
 	}*/
-
+	
 	//Obsolete, there's no authentication anymore
 	/*private void storeSecret(String secret) {
 		SharedPreferences settings = Globals.getContext().
@@ -312,7 +314,7 @@ public class ProxyConnector extends Thread {
 		editor.putString("proxySecret", secret);
 		editor.commit();
 	}*/
-
+	
 	//Obsolete, there's no authentication anymore
 	/*private void removeSecret() {
 		SharedPreferences settings = Globals.getContext().
@@ -322,7 +324,7 @@ public class ProxyConnector extends Thread {
 		editor.remove("proxySecret");
 		editor.commit();
 	}*/
-
+	
 	private void incomingCommand(JSONObject json) {
 		try {
 			String action = json.getString("action");
@@ -346,7 +348,7 @@ public class ProxyConnector extends Thread {
 			myLog.l(Log.INFO, "JSONException in proxy incomingCommand");
 		}
 	}
-
+	
 	private void startControlSession(int port) {
 		Socket socket;
 		myLog.d("Starting new proxy FTP control session");
@@ -361,7 +363,7 @@ public class ProxyConnector extends Thread {
 		thread.start();
 		ftpServerService.registerSessionThread(thread);
 	}
-
+	
 	/**
 	 * Connects an outgoing socket to the proxy and authenticates, creating an account
 	 * if necessary.
@@ -376,7 +378,7 @@ public class ProxyConnector extends Thread {
 		Socket socket;
 		OutputStream out = null;
 		InputStream in = null;
-
+		
 		try {
 			myLog.d("Opening proxy connection to " + hostname + ":" + port);
 			socket = new Socket();
@@ -387,7 +389,7 @@ public class ProxyConnector extends Thread {
 			out = socket.getOutputStream();
 			in = socket.getInputStream();
 			int numBytes;
-
+			
 			out.write(json.toString().getBytes(ENCODING));
 			myLog.l(Log.DEBUG, "Sent login request");
 			// Read and parse the server's response
@@ -413,12 +415,12 @@ public class ProxyConnector extends Thread {
 			return null;
 		}
 	}
-
+	
 	public void quit() {
 		setProxyState(State.DISCONNECTED);
 		try {
 			sendRequest(commandSocket, makeJsonRequest("finished")); // ignore reply
-
+			
 			if(inputStream != null) {
 				myLog.d("quit() closing proxy inputStream");
 				inputStream.close();
@@ -431,14 +433,13 @@ public class ProxyConnector extends Thread {
 			} else {
 				myLog.d("quit() won't close null socket");
 			}
-		}
-		catch (IOException e) {}
+		}  
+		catch (IOException e) {} 
 		catch(JSONException e) {}
 		persistProxyUsage();
 		Globals.setProxyConnector(null);
 	}
-
-	@SuppressWarnings("unused")
+	
 	private JSONObject sendCmdSocketRequest(JSONObject json) {
 		try {
 			boolean queued;
@@ -452,7 +453,7 @@ public class ProxyConnector extends Thread {
 					// where there is a thread that sent a proxy request but died before
 					// starting the subsequent request. If this is the case, the correct
 					// behavior is to run the next queued thread in the queue, or if the
-					// queue is empty, to perform our own request.
+					// queue is empty, to perform our own request. 
 					myLog.l(Log.INFO, "Won't wait on dead responseWaiter");
 					if(queuedRequestThreads.size() == 0) {
 						responseWaiter = Thread.currentThread();
@@ -516,7 +517,7 @@ public class ProxyConnector extends Thread {
 				// our response in "JSONObject response".
 				myLog.d("Cmd session response was: " + response);
 				return response;
-			}
+			} 
 			finally {
 				// Make sure that when this request finishes, the next thread on the
 				// queue gets started.
@@ -532,7 +533,7 @@ public class ProxyConnector extends Thread {
 		}
 	}
 
-	public JSONObject sendRequest(InputStream in, OutputStream out, JSONObject request)
+	public JSONObject sendRequest(InputStream in, OutputStream out, JSONObject request) 
 	throws JSONException {
 		try {
 			out.write(Util.jsonToByteArray(request));
@@ -556,8 +557,8 @@ public class ProxyConnector extends Thread {
 			return null;
 		}
 	}
-
-	public JSONObject sendRequest(Socket socket, JSONObject request)
+	
+	public JSONObject sendRequest(Socket socket, JSONObject request) 
 	throws JSONException {
 		 try {
 			 if(socket == null) {
@@ -565,8 +566,8 @@ public class ProxyConnector extends Thread {
 				 myLog.i("null socket in ProxyConnector.sendRequest()");
 				 return null;
 			 } else {
-				 return sendRequest(socket.getInputStream(),
-						 socket.getOutputStream(),
+				 return sendRequest(socket.getInputStream(), 
+						 socket.getOutputStream(), 
 						 request);
 			 }
 		 } catch (IOException e) {
@@ -574,7 +575,7 @@ public class ProxyConnector extends Thread {
 			 return null;
 		 }
 	}
-
+	
 	public ProxyDataSocketInfo pasvListen() {
 		try {
 			// connect to proxy and authenticate
@@ -585,7 +586,7 @@ public class ProxyConnector extends Thread {
 				return null;
 			}
 			JSONObject request = makeJsonRequest("data_pasv_listen");
-
+			
 			JSONObject response = sendRequest(socket, request);
 			if(response == null) {
 				return null;
@@ -597,11 +598,11 @@ public class ProxyConnector extends Thread {
 			return null;
 		}
 	}
-
+	
 	public Socket dataPortConnect(InetAddress clientAddr, int clientPort) {
-		/**
+		/** 
 		 * This function is called by a ProxyDataSocketFactory when it's time to
-		 * transfer some data in PORT mode (not PASV mode). We send a
+		 * transfer some data in PORT mode (not PASV mode). We send a 
 		 * data_port_connect request to the proxy, containing the IP and port
 		 * of the FTP client to which a connection should be made.
 		 */
@@ -625,20 +626,20 @@ public class ProxyConnector extends Thread {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Given a socket returned from pasvListen(), send a data_pasv_accept request
 	 * over the socket to the proxy, which should result in a socket that is ready
 	 * for data transfer with the FTP client. Of course, this will only work if the
 	 * FTP client connects to the proxy like it's supposed to. The client will have
-	 * already been told to connect by the response to its PASV command.
-	 *
+	 * already been told to connect by the response to its PASV command. 
+	 * 
 	 * This should only be called from the onTransfer method of ProxyDataSocketFactory.
-	 *
+	 *  
 	 * @param socket A socket previously returned from ProxyConnector.pasvListen()
 	 * @return true if the accept operation completed OK, otherwise false
 	 */
-
+	
 	public boolean pasvAccept(Socket socket) {
 		try {
 			JSONObject request = makeJsonRequest("data_pasv_accept");
@@ -658,7 +659,7 @@ public class ProxyConnector extends Thread {
 			return false;
 		}
 	}
-
+	
 	public InetAddress getProxyIp() {
 		if(this.isAlive()) {
 			if(commandSocket.isConnected()) {
@@ -667,14 +668,14 @@ public class ProxyConnector extends Thread {
 		}
 		return null;
 	}
-
+	
 	private JSONObject makeJsonRequest(String action) throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("action", action);
 		return json;
 	}
-
-	/* Quotas have been canceled for now
+	
+	/* Quotas have been canceled for now	  
 	  public QuotaStats getQuotaStats(boolean canUseCached) {
 		if(canUseCached) {
 			if(cachedQuotaStats != null) {
@@ -703,7 +704,7 @@ public class ProxyConnector extends Thread {
 			return null;
 		}
 	}*/
-
+	
 	// We want to track the total amount of data sent via the proxy server, to
 	// show it to the user and encourage them to donate.
 	void persistProxyUsage() {
@@ -717,7 +718,7 @@ public class ProxyConnector extends Thread {
 		editor.commit();
 		myLog.d("Persisted proxy usage to preferences");
 	}
-
+	
 	long getPersistedProxyUsage() {
 		// This gets the last persisted value for bytes transferred through
 		// the proxy. It can be out of date since it doesn't include data
@@ -726,13 +727,13 @@ public class ProxyConnector extends Thread {
 			getSharedPreferences(USAGE_PREFS_NAME, 0); // 0 == private
 		return prefs.getLong(USAGE_PREFS_NAME, 0); // Default count of 0
 	}
-
+	
 	public long getProxyUsage() {
 		// This gets the running total of all proxy usage, which may not have
 		// been persisted yet.
 		return proxyUsage;
 	}
-
+	
 	void incrementProxyUsage(long num) {
 		long oldProxyUsage = proxyUsage;
 		proxyUsage += num;
@@ -741,17 +742,17 @@ public class ProxyConnector extends Thread {
 			persistProxyUsage();
 		}
 	}
-
+	
 	public State getProxyState() {
 		return proxyState;
 	}
-
+	
 	private void setProxyState(State state) {
 		proxyState = state;
 		myLog.l(Log.DEBUG, "Proxy state changed to " + state, true);
 		FTPServerService.updateClients(); // UI update
 	}
-
+	
 	static public String stateToString(State s) {
 //		Context ctx = Globals.getContext();
 //		switch(s) {
@@ -766,11 +767,11 @@ public class ProxyConnector extends Thread {
 //		case UNREACHABLE:
 //			return ctx.getString(R.string.pst_unreachable);
 //		default:
-//			return ctx.getString(R.string.unknown);
+//			return ctx.getString(R.string.unknown); 
 //		}
 	    return "";
 	}
-
+	
 	/**
 	 * The URL to which users should point their FTP client.
 	 */
@@ -783,7 +784,7 @@ public class ProxyConnector extends Thread {
 		}
 		return "";
 	}
-
+	
 	/** If the proxy sends a human-readable message, it can be retrieved by
 	 * calling this function. Returns null if no message has been received.
 	 */

@@ -19,11 +19,11 @@
 
 package net.micode.fileexplorer;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+
+import java.util.Collection;
 
 public interface IFileInteractionListener {
 
@@ -39,6 +39,11 @@ public interface IFileInteractionListener {
 
     public boolean shouldShowOperationPane();
 
+    /**
+     * Handle operation listener.
+     * @param id
+     * @return true: indicate have operated it; false: otherwise.
+     */
     public boolean onOperation(int id);
 
     public String getDisplayPath(String path);
